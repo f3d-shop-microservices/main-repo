@@ -1,0 +1,64 @@
+version: '3.8'
+
+networks:
+  mynet:
+    name: mynet
+
+services:
+  web:
+    container_name: web
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    hostname: web
+    networks:
+      - mynet
+    ports:
+      - "8000:80"
+    env_file: .env
+    volumes:
+      - ./web/image/default.conf:/etc/nginx/sites-enabled/default.conf
+    working_dir: /var/www/html
+
+  adminer:
+    container_name: adminer
+    image: adminer
+    networks:
+      - mynet
+    restart: always
+    ports:
+      - 2000:8080
+
+  product-svc:
+    container_name: product-svc
+    build:
+      context: ./services/product
+      dockerfile: Dockerfile
+    hostname: product-svc
+    networks:
+      - mynet
+    ports:
+      - "8001:80"
+    env_file: .env
+    depends_on:
+      - product-svc-db
+    volumes:
+      - ./services/product/image/default.conf:/etc/nginx/sites-enabled/default.conf
+    working_dir: /var/www/html
+
+  product-svc-db:
+    container_name: product-svc-db
+    hostname: product-svc-db
+    networks:
+      - mynet
+    image: mariadb:10.8.3
+    # Uncomment below when on Mac M1
+    #    platform: linux/arm64/v8
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - 3306:3306
+    volumes:
+      - ./db/product/mysql-data:/var/lib/mysql
