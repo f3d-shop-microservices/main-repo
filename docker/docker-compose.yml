@@ -5,6 +5,17 @@ networks:
     name: mynet
 
 services:
+  #dev tools
+  adminer:
+    container_name: adminer
+    image: adminer
+    networks:
+      - mynet
+    restart: always
+    ports:
+      - "2000:8080"
+
+  #prod
   web:
     container_name: web
     build:
@@ -19,15 +30,6 @@ services:
     volumes:
       - ./web/image/default.conf:/etc/nginx/sites-enabled/default.conf
     working_dir: /var/www/html
-
-  adminer:
-    container_name: adminer
-    image: adminer
-    networks:
-      - mynet
-    restart: always
-    ports:
-      - 2000:8080
 
   product-svc:
     container_name: product-svc
@@ -59,6 +61,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
     ports:
-      - 3306:3306
+      - "3306:3306"
     volumes:
       - ./db/product/mysql-data:/var/lib/mysql
