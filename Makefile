@@ -37,5 +37,19 @@ update-submodules:
 init-submodules:
 	git submodule update --init --recursive
 
+#make add-submodule URL=git@github.com:your-org/new-service.git PATH=services/new-service
+add-submodule:
+	@if [ -z "$(URL)" ] || [ -z "$(PATH)" ]; then \
+		echo "Please provide both URL and PATH:"; \
+		echo " make add-submodule URL=git@github.com:org/repo.git PATH=services/repo"; \
+		exit 1; \
+	fi; \
+	echo "Adding submodule $(URL) into $(PATH)..."; \
+	git submodule add $(URL) $(PATH); \
+	git add .gitmodules $(PATH); \
+	git commit -m "Add submodule $(PATH) from $(URL)"; \
+	git push; \
+	echo "Submodule $(PATH) added and pushed."
+
 submodule-status:
 	git submodule status
