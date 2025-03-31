@@ -1,6 +1,19 @@
 start:
-	@echo "Building and running application through Docker..."
-	bash bin/docker-start.sh
+	@echo " Building and running application through Docker..."
+	@bash bin/docker-start.sh & \
+	SERVICE_PID=$$!; \
+	( \
+		secs=190; \
+		while [ $$secs -gt 0 ]; do \
+			printf "\r %3s seconds remaining" $$secs; \
+			sleep 1; \
+			secs=$$((secs - 1)); \
+		done; \
+		printf "\r Done! You are ready to go.                          \n"; \
+	) & \
+	TIMER_PID=$$!; \
+	wait $$SERVICE_PID; \
+	wait $$TIMER_PID
 
 stop:
 	@echo "Stoping docker-compose..."
