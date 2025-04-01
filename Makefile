@@ -3,7 +3,7 @@ start:
 	@bash bin/docker-start.sh & \
 	SERVICE_PID=$$!; \
 	( \
-		secs=190; \
+		secs=120; \
 		while [ $$secs -gt 0 ]; do \
 			printf "\r %3s seconds remaining" $$secs; \
 			sleep 1; \
@@ -18,6 +18,9 @@ start:
 stop:
 	@echo "Stoping docker-compose..."
 	cd docker && docker-compose down
+
+pull-artifacts:
+	@bash bin/pull-artifacts.sh
 
 dev:
 	@echo "Starting locally all applications..."

@@ -9,13 +9,18 @@ TAR_FILE="$SCRIPT_DIR/../docker/services/product/image/app.tar.gz"
 # Remove previous backup if exists
 rm -rf "$DEST_DIR" "$TAR_FILE"
 
-# Copy the app folder
-cp -r "$SRC_DIR" "$DEST_DIR"
+cd "$SRC_DIR" || exit 1
 
-# Remove vendor directory from the copied folder
-rm -rf "$DEST_DIR/vendor"
-rm -rf "$DEST_DIR/var/cache"
-rm -rf "$DEST_DIR/var/log"
+# Copy the app folder
+mkdir -p "$DEST_DIR"
+find . -type d \( -name 'vendor' -o -name 'var' \) -prune -o -print | while read path; do
+  if [ -d "$path" ]; then
+    mkdir -p "$DEST_DIR/$path"
+  else
+    mkdir -p "$(dirname "$DEST_DIR/$path")"
+    cp "$path" "$DEST_DIR/$path"
+  fi
+done
 
 # Create a tar archive containing only the contents of `app_backup`
 tar -czf "$TAR_FILE" -C "$DEST_DIR" .
