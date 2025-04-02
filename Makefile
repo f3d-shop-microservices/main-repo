@@ -3,7 +3,7 @@ start:
 	@bash bin/docker-start.sh & \
 	SERVICE_PID=$$!; \
 	( \
-		secs=120; \
+		secs=140; \
 		while [ $$secs -gt 0 ]; do \
 			printf "\r %3s seconds remaining" $$secs; \
 			sleep 1; \
