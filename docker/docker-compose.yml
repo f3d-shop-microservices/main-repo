@@ -1,9 +1,5 @@
 version: '3.8'
 
-networks:
-  gateway-net:
-  internal-net:
-
 services:
   #dev tools
   adminer:
@@ -41,7 +37,7 @@ services:
       - gateway-net
       - internal-net
     ports:
-      - "8001:80"
+      - "8080:8080"
     env_file: .env
     volumes:
       - ./services/gateway/image/default.conf:/etc/nginx/sites-enabled/default.conf
@@ -56,7 +52,7 @@ services:
     networks:
       - internal-net
     expose:
-      - "8002"
+      - "8080"
     env_file: .env
     depends_on:
       - product-svc-db
@@ -80,3 +76,7 @@ services:
       - "3306:3306"
     volumes:
       - ./db/product/mysql-data:/var/lib/mysql
+
+networks:
+  gateway-net:
+  internal-net:
