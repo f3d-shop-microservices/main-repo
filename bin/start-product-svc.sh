@@ -12,4 +12,4 @@ docker-compose up -d product-svc-db
 
 echo "Starting Symfony server in product..."
 cd "$SCRIPT_DIR/../services/product"
-symfony server:start --no-tls --port=8001
+symfony server:start --no-tls --port=8002

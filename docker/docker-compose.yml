@@ -1,8 +1,8 @@
 version: '3.8'
 
 networks:
-  mynet:
-    name: mynet
+  gateway-net:
+  internal-net:
 
 services:
   #dev tools
@@ -10,7 +10,7 @@ services:
     container_name: adminer
     image: adminer
     networks:
-      - mynet
+      - internal-net
     restart: always
     ports:
       - "2000:8080"
@@ -23,12 +23,28 @@ services:
       dockerfile: Dockerfile
     hostname: web
     networks:
-      - mynet
+      - gateway-net
     ports:
       - "8000:80"
     env_file: .env
     volumes:
       - ./web/image/default.conf:/etc/nginx/sites-enabled/default.conf
+    working_dir: /var/www/html
+
+  gateway-svc:
+    container_name: gateway-svc
+    build:
+      context: ./services/gateway
+      dockerfile: Dockerfile
+    hostname: gateway-svc
+    networks:
+      - gateway-net
+      - internal-net
+    ports:
+      - "8001:80"
+    env_file: .env
+    volumes:
+      - ./services/gateway/image/default.conf:/etc/nginx/sites-enabled/default.conf
     working_dir: /var/www/html
 
   product-svc:
@@ -38,9 +54,9 @@ services:
       dockerfile: Dockerfile
     hostname: product-svc
     networks:
-      - mynet
-    ports:
-      - "8001:80"
+      - internal-net
+    expose:
+      - "8002"
     env_file: .env
     depends_on:
       - product-svc-db
@@ -52,7 +68,7 @@ services:
     container_name: product-svc-db
     hostname: product-svc-db
     networks:
-      - mynet
+      - internal-net
     image: mariadb:10.8.3
     # Uncomment below when on Mac M1
     #    platform: linux/arm64/v8
