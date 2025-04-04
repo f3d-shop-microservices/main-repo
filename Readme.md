@@ -1,5 +1,5 @@
 # Shop Microservices
-![Схема архитектуры](docs/web-architecture-final.png)
+![Схема архитектуры](docs/web-architecture.png)
 ## Structure
 - **Web application** - frontend application
 - **API Gateway** — routing and load-balancing
