@@ -7,3 +7,6 @@
 [submodule "services/gateway"]
 	path = services/gateway
 	url = git@github.com:f3d-shop-microservices/gateway-service.git
+[submodule "services/auth"]
+	path = services/auth
+	url = git@github.com:f3d-shop-microservices/auth-service.git
