@@ -43,6 +43,42 @@ services:
       - ./services/gateway/image/default.conf:/etc/nginx/sites-enabled/default.conf
     working_dir: /var/www/html
 
+  auth-svc:
+    container_name: auth-svc
+    build:
+      context: ./services/auth
+      dockerfile: Dockerfile
+    hostname: auth-svc
+    networks:
+      - internal-net
+    expose:
+      - "8080"
+    env_file:
+      - .env
+      - ./db/auth/.env
+    depends_on:
+      - auth-svc-db
+    volumes:
+      - ./services/auth/image/default.conf:/etc/nginx/sites-enabled/default.conf
+    working_dir: /var/www/html
+
+  auth-svc-db:
+    container_name: auth-svc-db
+    hostname: auth-svc-db
+    networks:
+      - internal-net
+    image: mariadb:10.8.3
+    # Uncomment below when on Mac M1
+    #    platform: linux/arm64/v8
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./db/auth/mysql-data:/var/lib/mysql
+
   product-svc:
     container_name: product-svc
     build:
@@ -53,7 +89,9 @@ services:
       - internal-net
     expose:
       - "8080"
-    env_file: .env
+    env_file:
+      - .env
+      - ./db/product/.env
     depends_on:
       - product-svc-db
     volumes:
@@ -73,7 +111,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
     ports:
-      - "3306:3306"
+      - "3308:3306"
     volumes:
       - ./db/product/mysql-data:/var/lib/mysql
 
