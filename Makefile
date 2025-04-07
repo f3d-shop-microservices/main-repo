@@ -14,22 +14,6 @@ stop:
 pull-artifacts:
 	@bash bin/pull-artifacts.sh
 
-dev:
-	@echo "Starting locally all applications..."
-	@bash bin/start-webapp.sh & \
-	PID1=$$!; \
-	bash bin/start-product-svc.sh & \
-	PID2=$$!; \
-	echo "WebApp PID: $$PID1"; \
-	echo "ProductSvc PID: $$PID2"; \
-	trap '\
-		echo "\nCtrl+C detected. Stopping..."; \
-		kill -TERM $$PID1 $$PID2 2>/dev/null; \
-		echo "Stopping docker-compose..."; \
-		(cd docker && docker-compose down); \
-		exit 0' SIGINT SIGTERM; \
-	wait
-
 commit-submodule:
 	@read -p "Submodule path (e.g. services/product): " path; \
 	read -p "Commit message: " msg; \
