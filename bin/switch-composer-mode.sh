@@ -16,12 +16,13 @@ LOCAL_DEV="$TARGET_DIR/composer.local.dev"
 
 if [[ $MODE == "prod" ]]; then
   mv "$LOCAL_JSON" "$LOCAL_DEV" 2>/dev/null
+  sleep 0.5
   composer --working-dir="$TARGET_DIR" update f3d/shop-common --no-scripts
 elif [[ $MODE == "dev" ]]; then
   mv "$LOCAL_DEV" "$LOCAL_JSON" 2>/dev/null
   cd "$TARGET_DIR"
+  sleep 0.5
   composer update f3d/shop-common --no-scripts
-  composer update f3d/shop-common
 else
   echo "Usage: ./switch-composer-mode.sh [prod|dev] /path/to/microservice"
 fi
