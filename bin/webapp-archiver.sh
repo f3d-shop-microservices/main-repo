@@ -11,8 +11,6 @@ rm -rf "$DEST_DIR" "$TAR_FILE"
 
 cd "$SRC_DIR" || exit 1
 
-bash "$SCRIPT_DIR/switch-composer-mode.sh" prod web
-
 # Copy the app folder
 mkdir -p "$DEST_DIR"
 find . -type d \( -name 'vendor' -o -name 'var' \) -prune -o -print | while read path; do
@@ -25,10 +23,9 @@ find . -type d \( -name 'vendor' -o -name 'var' \) -prune -o -print | while read
 done
 
 # Create a tar archive containing only the contents of `app_backup`
-tar -czvf "$TAR_FILE" --exclude='composer.local.dev' -C "$DEST_DIR" .
+tar -czvf "$TAR_FILE" -C "$DEST_DIR" .
 
 # Cleanup copied directory
 rm -rf "$DEST_DIR"
 
-bash "$SCRIPT_DIR/switch-composer-mode.sh" dev web
 echo "Backup for web application created: $TAR_FILE"
