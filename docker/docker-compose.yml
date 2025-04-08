@@ -115,6 +115,17 @@ services:
     volumes:
       - ./db/product/mysql-data:/var/lib/mysql
 
+  consul:
+    image: consul:1.15.4
+    container_name: consul
+    hostname: consul-svc
+    ports:
+      - "8500:8500"
+      - "8600:8600/udp"
+    command: agent -dev -client=0.0.0.0
+    networks:
+      - internal-net
+
 networks:
   gateway-net:
   internal-net:
