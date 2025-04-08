@@ -7,6 +7,7 @@ WORKDIR /var/www/html
 # Copy your application files into the container
 COPY ./image/app.tar.gz /var/www/html
 RUN tar -xzf app.tar.gz -C /var/www/html
+RUN rm app.tar.gz
 
 # Get script for checking db is ready for accepting connections
 COPY ./image/wait-for-it.sh /usr/local/bin/wait-for-it.sh

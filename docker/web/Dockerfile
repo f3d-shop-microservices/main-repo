@@ -7,8 +7,7 @@ WORKDIR /var/www/html
 # Copy your application files into the container
 COPY ./image/app.tar.gz /var/www/html
 RUN tar -xzf app.tar.gz -C /var/www/html
-
-
+RUN rm app.tar.gz
 
 # Ensure proper permissions
 RUN chown -R www-data:www-data /var/www/html
