@@ -22,6 +22,8 @@ services:
       - gateway-net
     ports:
       - "8000:80"
+    environment:
+      SERVICE_HOST: "web"
     env_file: .env
     volumes:
       - ./web/image/default.conf:/etc/nginx/sites-enabled/default.conf
