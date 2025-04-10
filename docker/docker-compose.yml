@@ -137,6 +137,17 @@ services:
     networks:
       - internal-net
 
+  nginx:
+    build: ./services/nginx
+    container_name: nginx
+    ports:
+      - "443:443"
+    environment:
+      GATEWAY_HOST: host.docker.internal  # Или gateway для прода
+      GATEWAY_PORT: 8001
+    networks:
+      - internal-net
+
 networks:
   gateway-net:
   internal-net:
