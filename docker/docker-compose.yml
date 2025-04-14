@@ -1,22 +1,13 @@
 version: '3.8'
 
 services:
-  #dev tools
-  adminer:
-    container_name: adminer
-    image: adminer
-    networks:
-      - internal-net
-    restart: always
-    ports:
-      - "2000:8080"
-
-  #prod
   web:
     container_name: web
     build:
       context: ./web
       dockerfile: Dockerfile
+      args:
+        USE_TAR: "false"
     hostname: web
     networks:
       - gateway-net
@@ -29,6 +20,19 @@ services:
       - ./web/image/default.conf:/etc/nginx/sites-enabled/default.conf
     working_dir: /var/www/html
 
+  nginx:
+    build: ./services/nginx
+    container_name: nginx
+    hostname: nginx
+    ports:
+      - "443:443"
+    environment:
+      GATEWAY_HOST: ${GATEWAY_HOST:-gateway-svc}
+      GATEWAY_PORT: ${GATEWAY_PORT:-8080}
+    networks:
+      - gateway-net
+      - internal-net
+
   gateway-svc:
     container_name: gateway-svc
     build:
@@ -36,17 +40,18 @@ services:
       dockerfile: Dockerfile
     hostname: gateway-svc
     networks:
-      - gateway-net
       - internal-net
     environment:
       SERVICE_HOST: "gateway-svc"
       APP_PORT: "8080"
-    ports:
-      - "8080:8080"
+    expose:
+      - "8080"
     env_file: .env
     volumes:
       - ./services/gateway/image/default.conf:/etc/nginx/sites-enabled/default.conf
     working_dir: /var/www/html
+    depends_on:
+      - consul
 
   auth-svc:
     container_name: auth-svc
@@ -66,6 +71,7 @@ services:
       - ./db/auth/.env
     depends_on:
       - auth-svc-db
+      - consul
     volumes:
       - ./services/auth/image/default.conf:/etc/nginx/sites-enabled/default.conf
     working_dir: /var/www/html
@@ -105,6 +111,7 @@ services:
       - ./db/product/.env
     depends_on:
       - product-svc-db
+      - consul
     volumes:
       - ./services/product/image/default.conf:/etc/nginx/sites-enabled/default.conf
     working_dir: /var/www/html
@@ -137,17 +144,8 @@ services:
     networks:
       - internal-net
 
-  nginx:
-    build: ./services/nginx
-    container_name: nginx
-    ports:
-      - "443:443"
-    environment:
-      GATEWAY_HOST: host.docker.internal  # Или gateway для прода
-      GATEWAY_PORT: 8001
-    networks:
-      - internal-net
-
 networks:
   gateway-net:
   internal-net:
+
+

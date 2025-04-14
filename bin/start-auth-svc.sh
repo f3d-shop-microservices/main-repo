@@ -12,4 +12,5 @@ docker-compose up -d auth-svc-db
 
 echo "Starting Symfony server in Auth..."
 cd "$SCRIPT_DIR/../services/auth"
-symfony server:start --no-tls --port=8003
+php bin/console app:service-discovery:register
+symfony server:start -d --no-tls --port=8003

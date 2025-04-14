@@ -1,11 +1,6 @@
 start:
 	@echo "Building and running application through Docker..."
-	@bash bin/docker-start.sh & \
-	SERVICE_PID=$$!; \
-	( bash bin/wait-for-health.sh ) & \
-	WAIT_PID=$$!; \
-	wait $$SERVICE_PID; \
-	wait $$WAIT_PID
+	@bash bin/docker-start.sh "$(PROD)"
 
 stop:
 	@echo "Stoping docker-compose..."
@@ -31,3 +26,5 @@ init-submodules:
 
 submodule-status:
 	git submodule status
+
+#taskkill /F /IM symfony.exe /T

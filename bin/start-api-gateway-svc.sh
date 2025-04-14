@@ -8,4 +8,5 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 echo "Starting Symfony server in Gateway..."
 cd "$SCRIPT_DIR/../services/gateway"
-symfony server:start --no-tls --port=8001
+php bin/console app:service-discovery:register
+symfony server:start -d --no-tls --port=8001

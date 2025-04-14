@@ -2,6 +2,7 @@
 
 MODE=$1
 TARGET_DIR=$2
+SERVICE_NAME=$TARGET_DIR
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TARGET_DIR="$SCRIPT_DIR/../$TARGET_DIR"
@@ -14,6 +15,7 @@ fi
 LOCAL_JSON="$TARGET_DIR/composer.local.json"
 LOCAL_DEV="$TARGET_DIR/composer.local.dev"
 
+echo "Switching composer json for \"$SERVICE_NAME\". Mode: \"$MODE\""
 if [[ $MODE == "prod" ]]; then
   mv "$LOCAL_JSON" "$LOCAL_DEV" 2>/dev/null
   sleep 0.5

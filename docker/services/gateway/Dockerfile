@@ -9,6 +9,10 @@ COPY ./image/app.tar.gz /var/www/html
 RUN tar -xzf app.tar.gz -C /var/www/html
 RUN rm app.tar.gz
 
+# Get wrapper entry point
+COPY ./image/init.sh /init.sh
+RUN chmod +x /init.sh
+
 # Ensure proper permissions
 RUN chown -R www-data:www-data /var/www/html
 
@@ -16,4 +20,4 @@ RUN chown -R www-data:www-data /var/www/html
 RUN composer install --no-interaction
 
 # Define the command to start the container
-CMD ["/start.sh"]
+CMD ["/init.sh"]

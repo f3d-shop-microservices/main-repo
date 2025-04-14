@@ -6,7 +6,6 @@ set -e
 # Define the base directory of your script
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Start Symfony server in folder-a
-echo "Starting Symfony server in web..."
-cd "$SCRIPT_DIR/../web"
-symfony server:start -d --port=8000
+echo "Starting container for nginx..."
+cd "$SCRIPT_DIR/../docker"
+GATEWAY_HOST=host.docker.internal GATEWAY_PORT=8001 docker-compose up -d nginx

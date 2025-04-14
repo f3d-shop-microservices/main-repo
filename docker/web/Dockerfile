@@ -12,6 +12,9 @@ RUN rm app.tar.gz
 # Ensure proper permissions
 RUN chown -R www-data:www-data /var/www/html
 
+COPY ./image/init.sh /init.sh
+RUN chmod +x /init.sh
+
 # Install Composer dependencies (optional: you can skip it in Dockerfile)
 RUN composer install --no-interaction
 
@@ -22,4 +25,4 @@ RUN php bin/console asset-map:compile
 RUN chmod +x /start.sh
 
 # Define the command to start the container
-CMD ["/start.sh"]
+CMD ["/init.sh"]

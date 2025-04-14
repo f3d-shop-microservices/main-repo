@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  web:
+    volumes:
+      - ../web/src:/var/www/html/src
+      - ../web/templates:/var/www/html/templates
+      - ../web/public:/var/www/html/public
+
+  gateway-svc:
+    volumes:
+      - ../services/gateway/src:/var/www/html/src
+      - ../services/gateway/templates:/var/www/html/templates
+      - ../services/gateway/public:/var/www/html/public
+
+  auth-svc:
+    volumes:
+      - ../services/auth/src:/var/www/html/src
+      - ../services/auth/templates:/var/www/html/templates
+      - ../services/auth/public:/var/www/html/public
+
+  product-svc:
+    volumes:
+      - ../services/product/src:/var/www/html/src
+      - ../services/product/templates:/var/www/html/templates
+      - ../services/product/public:/var/www/html/public
