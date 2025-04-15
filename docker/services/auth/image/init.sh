@@ -1,6 +1,10 @@
 #!/bin/sh
 set -e
 
+export SERVICE_HOST=$(hostname)
+export APP_PORT=8080
+echo "Starting with SERVICE_HOST=$SERVICE_HOST and APP_PORT=$APP_PORT"
+
 echo "Waiting for DB to be ready..."
 /usr/local/bin/wait-for-it.sh auth-svc-db:3306 --timeout=60 --strict -- echo "DB is up!"
 

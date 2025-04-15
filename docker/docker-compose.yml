@@ -41,9 +41,6 @@ services:
     hostname: gateway-svc
     networks:
       - internal-net
-    environment:
-      SERVICE_HOST: "gateway-svc"
-      APP_PORT: "8080"
     expose:
       - "8080"
     env_file: .env
@@ -63,9 +60,6 @@ services:
       - internal-net
     expose:
       - "8080"
-    environment:
-      SERVICE_HOST: "auth-svc"
-      APP_PORT: "8080"
     env_file:
       - .env
       - ./db/auth/.env
@@ -103,9 +97,6 @@ services:
       - internal-net
     expose:
       - "8080"
-    environment:
-      SERVICE_HOST: "product-svc"
-      APP_PORT: "8080"
     env_file:
       - .env
       - ./db/product/.env
