@@ -1,13 +1,42 @@
 server {
     listen 443 ssl;
     http2 on;
+    server_name api.shopmicro.local;
 
     ssl_certificate     /etc/nginx/certs/nginx-selfsigned.crt;
     ssl_certificate_key /etc/nginx/certs/nginx-selfsigned.key;
 
     location / {
         proxy_pass http://${GATEWAY_HOST}:${GATEWAY_PORT};
+        proxy_set_header Host               $host;
+        proxy_set_header X-Forwarded-For    $remote_addr;
+        proxy_set_header X-Forwarded-Proto  https;
+        proxy_set_header X-Forwarded-Port   443;
+    }
+}
+
+server {
+    listen 443 ssl;
+    http2 on;
+    server_name front.shopmicro.local;
+
+    ssl_certificate     /etc/nginx/certs/nginx-selfsigned.crt;
+    ssl_certificate_key /etc/nginx/certs/nginx-selfsigned.key;
+
+    location / {
+        proxy_pass http://${FRONTEND_HOST}:${FRONTEND_PORT};
+        proxy_set_header   Host               $host;
+        proxy_set_header X-Real-IP          $remote_addr;
+        proxy_set_header X-Forwarded-For    $remote_addr;
+        proxy_set_header X-Forwarded-Proto  https;
+        proxy_set_header X-Forwarded-Port   443;
+    }
+
+    location ~ ^/(_(profiler|wdt)|css|images|js)/ {
+        proxy_pass http://${FRONTEND_HOST}:${FRONTEND_PORT};
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header X-Forwarded-Proto https;
     }
 }

@@ -1,16 +1,32 @@
 version: '3.8'
 
 services:
+
+  nginx:
+    build: ./services/nginx
+    container_name: nginx
+    ports:
+      - "443:443"
+    environment:
+      GATEWAY_HOST: ${GATEWAY_HOST:-gateway-svc}
+      GATEWAY_PORT: ${GATEWAY_PORT:-8080}
+      FRONTEND_HOST: ${FRONTEND_HOST:-web}
+      FRONTEND_PORT: ${FRONTEND_PORT:-80}
+    networks:
+      gateway-net:
+        ipv4_address: 172.30.0.10
+      internal-net:
+
   web:
     container_name: web
     build:
       context: ./web
       dockerfile: Dockerfile
-      args:
-        USE_TAR: "false"
     hostname: web
     networks:
       - gateway-net
+    extra_hosts:
+      - "api.shopmicro.local:172.30.0.10"
     ports:
       - "8000:80"
     environment:
@@ -19,19 +35,6 @@ services:
     volumes:
       - ./web/image/default.conf:/etc/nginx/sites-enabled/default.conf
     working_dir: /var/www/html
-
-  nginx:
-    build: ./services/nginx
-    container_name: nginx
-    hostname: nginx
-    ports:
-      - "443:443"
-    environment:
-      GATEWAY_HOST: ${GATEWAY_HOST:-gateway-svc}
-      GATEWAY_PORT: ${GATEWAY_PORT:-8080}
-    networks:
-      - gateway-net
-      - internal-net
 
   gateway-svc:
     container_name: gateway-svc
@@ -137,6 +140,12 @@ services:
 
 networks:
   gateway-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.30.0.0/16
+
   internal-net:
+    driver: bridge
 
 
