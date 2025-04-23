@@ -7,6 +7,8 @@ CONFIG="$(dirname "$0")/openssl.cnf"
 KEY="$CERT_DIR/nginx-selfsigned.key"
 CERT="$CERT_DIR/nginx-selfsigned.crt"
 
+mkdir -p "$CERT_DIR"
+
 echo "Generating self-signed certificate..."
 openssl req \
   -x509 \
