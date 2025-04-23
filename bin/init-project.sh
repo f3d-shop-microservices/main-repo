@@ -7,6 +7,8 @@ set -e
 # Define the base directory of your script
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+chmod +x ./*
+
 echo "Bootstrapping Web..."
 cd "$SCRIPT_DIR/../web"
 composer install
