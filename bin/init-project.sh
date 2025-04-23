@@ -30,6 +30,7 @@ php bin/console app:init-env-local
 
 echo "Bootstrapping Nginx..."
 cd "$SCRIPT_DIR/../docker/services/nginx"
+chmod +x generate-certs.sh
 ./generate-certs.sh
 
 echo "Preparing tars..."
