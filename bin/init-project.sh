@@ -28,6 +28,10 @@ cd "$SCRIPT_DIR/../services/product"
 composer install
 php bin/console app:init-env-local
 
+echo "Bootstrapping Nginx..."
+cd "$SCRIPT_DIR/../services/nginx"
+./generate-certs.sh
+
 echo "Preparing tars..."
 cd "$SCRIPT_DIR/../bin"
 ./pull-artifacts.sh
