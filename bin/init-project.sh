@@ -29,7 +29,7 @@ composer install
 php bin/console app:init-env-local
 
 echo "Bootstrapping Nginx..."
-cd "$SCRIPT_DIR/../services/nginx"
+cd "$SCRIPT_DIR/../docker/services/nginx"
 ./generate-certs.sh
 
 echo "Preparing tars..."
