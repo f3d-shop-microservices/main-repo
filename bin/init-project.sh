@@ -9,19 +9,23 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 echo "Bootstrapping Web..."
 cd "$SCRIPT_DIR/../web"
+composer install
 php bin/console app:init-env-local
 
 echo "Bootstrapping Auth..."
 cd "$SCRIPT_DIR/../services/auth"
+composer install
 php bin/console app:init-env-local
 php bin/console app:init-jwt
 
 echo "Bootstrapping Gateway..."
 cd "$SCRIPT_DIR/../services/gateway"
+composer install
 php bin/console app:init-env-local
 
 echo "Bootstrapping Product..."
 cd "$SCRIPT_DIR/../services/product"
+composer install
 php bin/console app:init-env-local
 
 echo "Preparing tars..."
