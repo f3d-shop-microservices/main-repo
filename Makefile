@@ -1,3 +1,7 @@
+init:
+	@bash bin/init-project.sh
+	@$(MAKE) start PROD=true
+
 start:
 	@echo "Building and running application through Docker..."
 	@bash bin/docker-start.sh "$(PROD)"
