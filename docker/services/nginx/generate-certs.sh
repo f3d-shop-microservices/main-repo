@@ -3,7 +3,7 @@
 set -e
 
 CERT_DIR="$(dirname "$0")/certs"
-CONFIG="$CERT_DIR/openssl.cnf"
+CONFIG="$(dirname "$0")/openssl.cnf"
 KEY="$CERT_DIR/nginx-selfsigned.key"
 CERT="$CERT_DIR/nginx-selfsigned.crt"
 
