@@ -7,6 +7,7 @@ set -e
 # Define the base directory of your script
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+cd "$SCRIPT_DIR"
 chmod +x ./*
 
 echo "Bootstrapping Web..."
