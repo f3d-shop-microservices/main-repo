@@ -10,18 +10,54 @@
 - **Product Service** — microservice with products business logic
 - **Product Service DB** — Mysql db for Product microservice
 
-Installation
+# Installation
 
-Clone from git:
+## Clone the Repository
+
+```bash
 git clone --recurse-submodules git@github.com:f3d-shop-microservices/main-repo.git
+```
 
-Make sure on your local machine you have php8.1, Composer, OpenSSL, Make installed
-Run:
+---
+
+## Requirements
+
+Make sure you have the following installed on your machine:
+
+- PHP 8.1
+- Composer
+- OpenSSL
+- Make
+
+---
+
+## Init project
+
+```bash
 make init
+```
+
+## Make first test run
+
+```bash
 make start PROD=true
+```
 
-also modify hosts file with:
-127.0.0.1   front.shopmicro.local
+---
+
+## 🗂️ Modify Your Hosts File
+
+Add the following entries to your `/etc/hosts` file:
+
+```text
+127.0.0.1   front.shopmicro.local  
 127.0.0.1   api.shopmicro.local
+```
 
-Enjoy
+> 💡 *You may need administrator privileges to edit this file.*
+
+---
+
+## Enjoy!
+
+You're all set. Go to https://front.shopmicro.local and have fun using the project!
