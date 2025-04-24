@@ -45,7 +45,7 @@ make start PROD=true
 
 ---
 
-## 🗂️ Modify Your Hosts File
+## Modify Your Hosts File
 
 Add the following entries to your `/etc/hosts` file:
 
