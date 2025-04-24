@@ -12,23 +12,23 @@ chmod +x ./*
 
 echo "Bootstrapping Web..."
 cd "$SCRIPT_DIR/../web"
-composer install --no-scripts
+composer install
 php bin/console app:init-env-local
 
 echo "Bootstrapping Auth..."
 cd "$SCRIPT_DIR/../services/auth"
-composer install --no-scripts
+composer install
 php bin/console app:init-env-local
 php bin/console app:init-jwt
 
 echo "Bootstrapping Gateway..."
 cd "$SCRIPT_DIR/../services/gateway"
-composer install --no-scripts
+composer install
 php bin/console app:init-env-local
 
 echo "Bootstrapping Product..."
 cd "$SCRIPT_DIR/../services/product"
-composer install --no-scripts
+composer install
 php bin/console app:init-env-local
 
 echo "Bootstrapping Nginx..."
