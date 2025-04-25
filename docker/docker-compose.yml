@@ -2,8 +2,51 @@ version: '3.8'
 
 services:
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.19
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+    volumes:
+      - ./elasticsearch/data:/usr/share/elasticsearch/data
+    networks:
+      - gateway-net
+      - internal-net
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.17.19
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    networks:
+      - gateway-net
+      - internal-net
+
+  fluentd:
+    build: ./fluentd
+    container_name: fluentd
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+    volumes:
+      - ./fluentd/data:/fluentd/log
+      - ./fluentd/fluent.conf:/fluentd/etc/fluent.conf
+    depends_on:
+      - elasticsearch
+    networks:
+      - gateway-net
+      - internal-net
+
   nginx:
-    build: ./services/nginx
+    build: ./nginx
     container_name: nginx
     ports:
       - "443:443"
@@ -16,6 +59,13 @@ services:
       gateway-net:
         ipv4_address: 172.30.0.10
       internal-net:
+    depends_on:
+      - fluentd
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: host.docker.internal:24224
+        tag: nginx
 
   web:
     container_name: web
@@ -35,6 +85,13 @@ services:
     volumes:
       - ./web/image/default.conf:/etc/nginx/sites-enabled/default.conf
     working_dir: /var/www/html
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: host.docker.internal:24224
+        tag: web
+    depends_on:
+      - fluentd
 
   gateway-svc:
     container_name: gateway-svc
@@ -52,6 +109,12 @@ services:
     working_dir: /var/www/html
     depends_on:
       - consul
+      - fluentd
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: host.docker.internal:24224
+        tag: gateway
 
   auth-svc:
     container_name: auth-svc
@@ -69,9 +132,15 @@ services:
     depends_on:
       - auth-svc-db
       - consul
+      - fluentd
     volumes:
       - ./services/auth/image/default.conf:/etc/nginx/sites-enabled/default.conf
     working_dir: /var/www/html
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: host.docker.internal:24224
+        tag: auth
 
   auth-svc-db:
     container_name: auth-svc-db
@@ -106,9 +175,15 @@ services:
     depends_on:
       - product-svc-db
       - consul
+      - fluentd
     volumes:
       - ./services/product/image/default.conf:/etc/nginx/sites-enabled/default.conf
     working_dir: /var/www/html
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: host.docker.internal:24224
+        tag: product
 
   product-svc-db:
     container_name: product-svc-db
@@ -137,6 +212,13 @@ services:
     command: agent -dev -client=0.0.0.0
     networks:
       - internal-net
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: host.docker.internal:24224
+        tag: consul
+    depends_on:
+      - fluentd
 
 networks:
   gateway-net:
